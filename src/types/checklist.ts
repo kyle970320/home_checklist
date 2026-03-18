@@ -6,12 +6,18 @@ export type ChecklistCalculator = {
   safePercent: string
 }
 
+export type ChecklistChoice = {
+  mode: 'included-separate'
+  value: 'included' | 'separate' | null
+}
+
 export type ChecklistItem = {
   id: string
   label: string
   hint?: string
   checked: boolean
   calculator?: ChecklistCalculator
+  choice?: ChecklistChoice
 }
 
 export type ChecklistGroup = {

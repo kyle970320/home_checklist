@@ -1,9 +1,14 @@
-import type { ChecklistCalculator, ChecklistSection } from "../types/checklist";
+import type {
+  ChecklistCalculator,
+  ChecklistChoice,
+  ChecklistSection,
+} from "../types/checklist";
 
 type TemplateItem = {
   label: string;
   hint?: string;
   calculator?: ChecklistCalculator;
+  choice?: ChecklistChoice;
 };
 
 function createItems(
@@ -17,6 +22,7 @@ function createItems(
     hint: item.hint,
     checked: false,
     calculator: item.calculator,
+    choice: item.choice,
   }));
 }
 
@@ -27,6 +33,13 @@ function createDepositRatioCalculator(): ChecklistCalculator {
     deposit: "",
     maxDebt: "",
     safePercent: "70",
+  };
+}
+
+function createIncludedSeparateChoice(): ChecklistChoice {
+  return {
+    mode: "included-separate",
+    value: null,
   };
 }
 
@@ -55,20 +68,20 @@ export function createDefaultChecklistSections(): ChecklistSection[] {
           items: createItems("registry", "section-a", [
             { label: "최근 소유자와 임대인이 일치하는지 확인하기" },
             {
-              label: "가등기가 없는지 확인하기",
+              label: "가등기가 있는지 확인하기",
               hint: "집주인이 바뀔 가능성이 있어 피하는 편이 좋아요.",
             },
             {
-              label: "신탁이 없는지 확인하기",
+              label: "신탁이 있는지 확인하기",
               hint: "신탁회사 담보 대출 여부를 꼭 체크하세요.",
             },
             {
-              label: "압류 또는 가압류가 없는지 확인하기",
+              label: "압류 또는 가압류가 있는지 확인하기",
               hint: "채권자가 집을 가져갈 수 있는 위험이 있어요.",
             },
-            { label: "경매개시결정이 없는지 확인하기" },
+            { label: "경매개시결정이 있는지 확인하기" },
             {
-              label: "임차권등기명령이 없는지 확인하기",
+              label: "임차권등기명령이 있는지 확인하기",
               hint: "이전 세입자가 보증금을 못 받은 이력이 있을 수 있어요.",
             },
           ]),
@@ -83,7 +96,7 @@ export function createDefaultChecklistSections(): ChecklistSection[] {
             {
               label:
                 "채권최고액 + 보증금이 주택 시세의 안전 기준 이내인지 계산하기",
-              hint: "시세는 억 단위, 보증금과 채권최고액은 천만 단위로 넣으면 자동 계산돼요.",
+              hint: "시세는 억원, 보증금과 채권최고액은 천만원 단위로 넣으면 자동 계산돼요.",
               calculator: createDepositRatioCalculator(),
             },
             {
@@ -161,6 +174,7 @@ export function createDefaultChecklistSections(): ChecklistSection[] {
           id: "safety",
           title: "5. 주차공간, 방범·보안, 누수 점검",
           items: createItems("onsite", "safety", [
+            { label: "주차공간과 월 주차 비용을 확인하기" },
             { label: "방범창이 튼튼하게 설치되어 있는지 확인하기" },
             { label: "현관 출입문에 도어록이 설치되어 있는지 확인하기" },
             { label: "주택에 CCTV가 설치되어 있는지 확인하기" },
@@ -186,6 +200,18 @@ export function createDefaultChecklistSections(): ChecklistSection[] {
             },
           ]),
         },
+        {
+          id: "maintenance",
+          title: "6. 관리비 포함 항목",
+          items: createItems("onsite", "maintenance", [
+            { label: "공용", choice: createIncludedSeparateChoice() },
+            { label: "수도세", choice: createIncludedSeparateChoice() },
+            { label: "전기세", choice: createIncludedSeparateChoice() },
+            { label: "도시가스", choice: createIncludedSeparateChoice() },
+            { label: "난방", choice: createIncludedSeparateChoice() },
+            { label: "기타", choice: createIncludedSeparateChoice() },
+          ]),
+        },
       ],
     },
     {
@@ -205,11 +231,7 @@ export function createDefaultChecklistSections(): ChecklistSection[] {
             },
             {
               label:
-                "보증보험 가입 등 임차인의 보증금 보호를 위한 행위에 임대인은 적극 협조한다.",
-            },
-            {
-              label:
-                "hug 보증보험 가입 불가시, 임대인은 계약금을 전액 반환한다",
+                "임차인이 전세보증금 반환보증보험 가입을 신청했으나, 가입이 거절될 경우 계약은 즉시 해제되며 임대인은 계약금 전액을 즉시 반환한다.",
             },
             {
               label:

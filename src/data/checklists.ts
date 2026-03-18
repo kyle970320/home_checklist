@@ -1,5 +1,5 @@
 import { createDefaultChecklistSections } from './checklistTemplate'
-import type { Checklist, ChecklistCalculator, ChecklistGroup, ChecklistItem, ChecklistSection } from '../types/checklist'
+import type { Checklist, ChecklistCalculator, ChecklistChoice, ChecklistGroup, ChecklistItem, ChecklistSection } from '../types/checklist'
 import { safeJsonParse } from '../utils/storage'
 
 const STORAGE_KEY = 'home-checklist/checklists:v1'
@@ -20,6 +20,7 @@ type StorageShape = {
 }
 
 type CalculatorPatch = Partial<ChecklistCalculator>
+type ChoiceValue = ChecklistChoice['value']
 
 function now() {
   return Date.now()
@@ -40,6 +41,14 @@ function mergeCalculator(
   }
 }
 
+function mergeChoice(templateChoice: ChecklistChoice | undefined, storedChoice: ChecklistChoice | undefined): ChecklistChoice | undefined {
+  if (!templateChoice) return undefined
+  return {
+    ...templateChoice,
+    ...storedChoice,
+  }
+}
+
 function mergeItems(templateItems: ChecklistItem[], storedItems: ChecklistItem[] | undefined) {
   const storedMap = new Map(storedItems?.map((item) => [item.id, item]) ?? [])
 
@@ -49,6 +58,7 @@ function mergeItems(templateItems: ChecklistItem[], storedItems: ChecklistItem[]
       ...item,
       checked: stored?.checked ?? item.checked,
       calculator: mergeCalculator(item.calculator, stored?.calculator),
+      choice: mergeChoice(item.choice, stored?.choice),
     }
   })
 }
@@ -181,6 +191,31 @@ export function updateChecklistCalculator(id: string, itemId: string, patch: Cal
             calculator: {
               ...entry.calculator,
               ...patch,
+            },
+          }
+        }),
+      })),
+    })),
+  }))
+}
+
+export function updateChecklistChoice(id: string, itemId: string, value: ChoiceValue): Checklist {
+  const shape = loadShape()
+
+  return updateChecklist(shape, id, (item) => ({
+    ...item,
+    updatedAt: now(),
+    sections: item.sections.map((section) => ({
+      ...section,
+      groups: section.groups.map((group) => ({
+        ...group,
+        items: group.items.map((entry) => {
+          if (entry.id !== itemId || !entry.choice) return entry
+          return {
+            ...entry,
+            choice: {
+              ...entry.choice,
+              value,
             },
           }
         }),
