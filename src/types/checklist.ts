@@ -7,8 +7,8 @@ export type ChecklistCalculator = {
 }
 
 export type ChecklistChoice = {
-  mode: 'included-separate'
-  value: 'included' | 'separate' | null
+  mode: 'included-separate' | 'yes-no'
+  value: 'included' | 'separate' | 'yes' | 'no' | null
 }
 
 export type ChecklistItem = {

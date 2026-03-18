@@ -43,6 +43,13 @@ function createIncludedSeparateChoice(): ChecklistChoice {
   };
 }
 
+export function createYesNoChoice(): ChecklistChoice {
+  return {
+    mode: "yes-no",
+    value: null,
+  };
+}
+
 export function createDefaultChecklistSections(): ChecklistSection[] {
   return [
     {
@@ -114,6 +121,20 @@ export function createDefaultChecklistSections(): ChecklistSection[] {
         "실제 방문했을 때 외부 환경부터 내부 상태까지 빠짐없이 점검하세요.",
       tone: "default",
       groups: [
+        {
+          id: "payment",
+          title: "0. 월세 관련",
+          items: createItems("onsite", "outside", [
+            {
+              label: "장기수선충당금 내는지 확인하기",
+              choice: createYesNoChoice(),
+            },
+            {
+              label: "월세에 부가세 포함여부 확인하기",
+              choice: createYesNoChoice(),
+            },
+          ]),
+        },
         {
           id: "outside",
           title: "1. 외부 요소",
@@ -239,7 +260,7 @@ export function createDefaultChecklistSections(): ChecklistSection[] {
             },
             {
               label:
-                "임대인은 본 주택의 매매계약을 체결하는 경우 사전에 임차인에게 고지하여야 한다.",
+                "임대인은 계약 기간 중 임차 주택을 매매하거나 금융기관 등에 담보로 제공하는 경우 이에 대해 임차인에게 통보해야 한다. 이 경우 임차인은 신규 임대인의 지위 승계를 거부하고 임대차 계약을 종료할 수 있다.",
             },
           ]),
         },

@@ -207,6 +207,11 @@ function ChoiceSwitch({
 }) {
   if (!item.choice) return null
 
+  const primaryLabel = item.choice.mode === 'yes-no' ? '예' : '포함'
+  const secondaryLabel = item.choice.mode === 'yes-no' ? '아니오' : '개별'
+  const primaryValue: ChecklistChoice['value'] = item.choice.mode === 'yes-no' ? 'yes' : 'included'
+  const secondaryValue: ChecklistChoice['value'] = item.choice.mode === 'yes-no' ? 'no' : 'separate'
+
   const handleChoice = (value: ChecklistChoice['value']) => {
     onChecklistChange(updateChecklistChoice(checklistId, item.id, value))
   }
@@ -215,25 +220,25 @@ function ChoiceSwitch({
     <div className="mt-3 inline-flex w-full rounded-xl border border-zinc-200 bg-white p-1 dark:border-white/10 dark:bg-zinc-950/60">
       <button
         type="button"
-        onClick={() => handleChoice('included')}
+        onClick={() => handleChoice(primaryValue)}
         className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold transition ${
-          item.choice.value === 'included'
+          item.choice.value === primaryValue
             ? 'bg-emerald-500 text-white'
             : 'text-zinc-600 hover:bg-zinc-100 dark:text-white/70 dark:hover:bg-white/8'
         }`}
       >
-        포함
+        {primaryLabel}
       </button>
       <button
         type="button"
-        onClick={() => handleChoice('separate')}
+        onClick={() => handleChoice(secondaryValue)}
         className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold transition ${
-          item.choice.value === 'separate'
+          item.choice.value === secondaryValue
             ? 'bg-amber-500 text-white'
             : 'text-zinc-600 hover:bg-zinc-100 dark:text-white/70 dark:hover:bg-white/8'
         }`}
       >
-        개별
+        {secondaryLabel}
       </button>
     </div>
   )
