@@ -55,20 +55,20 @@ export function createDefaultChecklistSections(): ChecklistSection[] {
           items: createItems("registry", "section-a", [
             { label: "최근 소유자와 임대인이 일치하는지 확인하기" },
             {
-              label: "가등기가 있는지 확인하기",
+              label: "가등기가 없는지 확인하기",
               hint: "집주인이 바뀔 가능성이 있어 피하는 편이 좋아요.",
             },
             {
-              label: "신탁이 있는지 확인하기",
+              label: "신탁이 없는지 확인하기",
               hint: "신탁회사 담보 대출 여부를 꼭 체크하세요.",
             },
             {
-              label: "압류 또는 가압류가 있는지 확인하기",
+              label: "압류 또는 가압류가 없는지 확인하기",
               hint: "채권자가 집을 가져갈 수 있는 위험이 있어요.",
             },
-            { label: "경매개시결정이 있는지 확인하기" },
+            { label: "경매개시결정이 없는지 확인하기" },
             {
-              label: "임차권등기명령이 있는지 확인하기",
+              label: "임차권등기명령이 없는지 확인하기",
               hint: "이전 세입자가 보증금을 못 받은 이력이 있을 수 있어요.",
             },
           ]),
